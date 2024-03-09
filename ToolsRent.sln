@@ -4,10 +4,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsRent.Web", "ToolsRent.Web\ToolsRent.Web.csproj", "{8ADA85E2-8EB1-44A9-884E-1FC4490FDED5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2C984717-D8F8-4BA5-B90E-0ED1923AB583} = {2C984717-D8F8-4BA5-B90E-0ED1923AB583}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsRent.Dal", "ToolsRent.Dal\ToolsRent.Dal.csproj", "{015997F2-04C7-495F-80B8-A8B227440228}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsRent.Bll", "ToolsRent.Bll\ToolsRent.Bll.csproj", "{D3468894-87B4-42F8-B306-BD93830BE2B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsRent", "ToolsRent\ToolsRent.csproj", "{2C984717-D8F8-4BA5-B90E-0ED1923AB583}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +32,10 @@ Global
 		{D3468894-87B4-42F8-B306-BD93830BE2B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3468894-87B4-42F8-B306-BD93830BE2B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3468894-87B4-42F8-B306-BD93830BE2B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C984717-D8F8-4BA5-B90E-0ED1923AB583}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C984717-D8F8-4BA5-B90E-0ED1923AB583}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C984717-D8F8-4BA5-B90E-0ED1923AB583}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C984717-D8F8-4BA5-B90E-0ED1923AB583}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

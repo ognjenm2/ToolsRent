@@ -5,37 +5,24 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using ToolsRent.Dal.Models;
+using ToolsRent.Dal.Reservations;
+using ToolsRent.Models;
 namespace ToolsRent.Bll.Reservations
 {
     public class ReservationsManager
     {
-        public static DTResult<ReservationsModel> GetActivities()
+        public static List<ReservationModel> GetReservations()
         {
-            using (var db = new TestDBToolsReservationEntities())
+            List<ReservationModel> reservations = new List<ReservationModel>();
+            try
             {
-
-                Expression<Func<Activity, bool>> filter = null;
-                if (!String.IsNullOrWhiteSpace(param.Search.Value))
-                {
-                    filter = (p =>
-                            p.ActivityCode.Contains(param.Search.Value) ||
-                            p.Description.Contains(param.Search.Value)
-                        );
-                }
-                //
-                var data = AdministrationQueries.GetActivities(db, param.SortOrder, param.Start, param.Length, filter);
-                int count = AdministrationQueries.CountActivities(db, filter);
-                //
-                var result = new DTResult<CodeListModel>
-                {
-                    draw = param.Draw,
-                    data = AdministrationTranslator.Translate(data),
-                    recordsFiltered = count,
-                    recordsTotal = count
-                };
-
-                return result;
+                reservations = ReservationsDao.GetReservations();
             }
+            catch (Exception ex)
+            {
+                //error handler
+            }
+            return reservations;
         }
     }
 }

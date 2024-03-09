@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ToolsRent.Bll.Reservations;
+using ToolsRent.Models;
+using ToolsRent.Web.Translators;
+using ToolsRent.Web.ViewModels;
 
 namespace ToolsRent.Web.Controllers
 {
@@ -15,18 +18,25 @@ namespace ToolsRent.Web.Controllers
             return View();
         }
 
-        public JsonResult ReservationsHandler( )
+        [HttpPost]
+        public JsonResult ReservationsHandler(DTParameters param)
         {
             try
             {
                 
-                var result = ReservationsManager.GetReservations( );
+                var reservations = ReservationsManager.GetReservations();
+
+                var result = new DTResult<ReservationModel>
+                {
+                    draw = param.Draw,
+                    //data = ReservationsTranslator.Translate(reservations)
+                    data = reservations
+                };
 
                 return Json(result);
             }
             catch (Exception e)
             {
-                //ExceptionHelper.LogException(e);
                 return Json(new { error = e.Message });
             }
         }

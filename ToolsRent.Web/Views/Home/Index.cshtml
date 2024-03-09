@@ -3,98 +3,60 @@
 }
 
 <main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
-
     <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
-    </div>
-    <div class="row">
-        <table id="reservations">
+        <button href="#!" class="btn btn-primary" id="btnCreate">Unesi rezervaciju</button>
+        <table id="reservations" class="table table-bordered table-hover dataTable no-footer" width="100%">
             <thead>
                 <tr>
                     <th>Ime i Prezime</th>
 
                     <th>Datum i vrijeme od</th>
 
-                    <th>Datum i vrijeme do</th>
-
                     <th>Napomena</th>
 
                     <th>Tip alata</th>
+
+                    <th>Akcija</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>Ognjen Minić</td>
-                    <td>2023.03.07T18:14:23</td>
-                    <td>2023.05.07T18:14:23</td>
-                    <td>Uzeo i pomocni kotač</td>
-                    <td>Svemirska Bušilica</td>
-                </tr>
-                <tr>
-                    <td>Ognjen</td>
-
-                    <td>2023.03.07T18:14:23</td>
-                    <td>2023.05.07T18:14:23</td>
-                    <td>Uzeo i pomocni kotač</td>
-                    <td>Svemirska Bušilica</td>
-                </tr>
-
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
 </main>
 @section Scripts
 {
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $('#reservations').DataTable({
-            "serverSide": true,
-            "ajax": {
-                "type": "POST",
-                "url": '@Url.Action("ReservationsHandler","Reservations")',
-                "contentType": 'application/json; charset=utf-8',
-                'data': function (data) { return data = JSON.stringify(data); }
-            },
-            "drawCallback": function( settings ) {
-                //$.hideLoading();
-            },
-            "pageLength": 50,
-            "searchDelay": 400,
-            "processing": false,
-            "paging": true,
-            "deferRender": true,
-            "columns": [
+                 "serverSide": true,
+                 "ajax": {
+                     "type": "POST",
+                     "url": '@Url.Action("ReservationsHandler","Reservations")',
+                     "contentType": 'application/json; charset=utf-8',
+                     'data': function (data) { return data = JSON.stringify(data); }
+                 },
+                 "drawCallback": function( settings ) {
+                     //$.hideLoading();
+                 },
+                 "pageLength": 50,
+                 "searchDelay": 400,
+                 "processing": false,
+                 "paging": true,
+                 "deferRender": true,
+                 "columns": [{ "data": "ImePrez"  },
+                     { "data": "From" },
+                     { "data": "Note" },
+                     { "data": "ToolType" },
+                     {
+                         "width": "20px", "orderable": false, "render": function (data, type, row, meta) {
+                             var htmlChunk = '' + '<a class="editItem" data-id="' + row.ID + '" href="#"><span class="fa fa-lg fa-pencil"></span></a>';
+                             htmlChunk += '<a class="deleteItem" data-id="' + row.ID + '" href="#"><span class="fa fa-lg fa-trash" style="padding-top:10px"></span></a>';
 
-                { "data": "ImePrezime"  },
-                { "data": "DateTimeTo" },
-                { "data": "DateTimeFrom" }
-                ],
-                "order": [1, "asc"]
-
+                             return htmlChunk;
+                         }
+                     }]
+                 });
         });
-        }
     </script>
 }

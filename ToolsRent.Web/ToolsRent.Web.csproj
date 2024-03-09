@@ -134,6 +134,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Translators\ReservationsTranslator.cs" />
     <Compile Include="ViewModels\DatatableViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -153,7 +154,10 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -162,7 +166,14 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\dataTables.js" />
+    <Content Include="Scripts\dataTables.min.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -231,6 +242,10 @@
     <ProjectReference Include="..\ToolsRent.Dal\ToolsRent.Dal.csproj">
       <Project>{015997f2-04c7-495f-80b8-a8b227440228}</Project>
       <Name>ToolsRent.Dal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ToolsRent\ToolsRent.csproj">
+      <Project>{2C984717-D8F8-4BA5-B90E-0ED1923AB583}</Project>
+      <Name>ToolsRent</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
