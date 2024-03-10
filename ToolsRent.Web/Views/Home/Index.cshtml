@@ -2,6 +2,8 @@
     ViewBag.Title = "Home Page";
 }
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 <main>
     <div class="row">
         <div class="col">
@@ -45,9 +47,11 @@
 @section Scripts
 {
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
-            var table = $('#reservations').DataTable({
+                var table = $('#reservations').DataTable({
 
                  "ajax": {
                      "type": "POST",
@@ -75,7 +79,9 @@
                              return htmlChunk;
                          }
                      }]
-                 });
+            });
+
+
         });
 
 
@@ -88,20 +94,35 @@
         var htmlContainerCreateReservation = $("#htmlContainerCreateReservation");
         var htmlContainerCreateToolReservation = $("#htmlContainerCreateToolReservation");
 
-        _CreateReservationModal.on('hidden.bs.modal', function () {
-            debugger;
-            htmlContainerCreateReservation.html("");
-        });
+        //_CreateReservationModal.on('hidden.bs.modal', function () {
+        //    debugger;
+        //    htmlContainerCreateReservation.html("");
+        //});
 
         var _renderFormCreateReservation = function (response) {
             debugger;
             htmlContainerCreateReservation.html(response);
+            $('#reservationCreateForm').on('submit', function (e) {
+                debugger;
+                e.preventDefault();
+
+                //$.ajax({
+                //    url: $(this).attr('action'),
+                //    type: 'POST',
+                //    data: $(this).serialize(),
+                //    success: function (response) {
+                //        EmployeesModule.handleSuccessUpdateEmployee(response);
+                //    },
+                //    error: function () {
+                //        CostMgtScripts.handleErrorAjax();
+                //    }
+                //});
+            });
 
         }
         var _renderFormCreateToolReservation = function (response) {
             debugger;
             htmlContainerCreateToolReservation.html(response);
-
         }
 
 
@@ -112,29 +133,88 @@
                 url: url
             })
                 .done(function (response) {
+                    debugger;
                     _renderFormCreateReservation(response);
+
                 })
                 .fail(function (xhr) {
                     if (xhr.responseText && JSON.parse(xhr.responseText).Message) {
-                        //EERVScripts.showAlertErrorMessage(JSON.parse(xhr.responseText).Message);
+
                     }
                 });
+            return false;
         }
 
-        var createToolReservation = function (url) {
+
+
+
+        var createAjaxReservation = function (url) {
             debugger;
 
+            // Find the ajax form in the modal for creating a reservation
+            var resForm = $("#reservationCreateForm");
+            var formData = resForm.serialize();
             $.ajax({
-                url: url
-            })
-                .done(function (response) {
-                    _renderFormCreateToolReservation(response);
-                })
-                .fail(function (xhr) {
-                    if (xhr.responseText && JSON.parse(xhr.responseText).Message) {
+                type: 'POST',
+                url: '/Reservations/CreateReservation',
+                data: formData,
+                success: function (response) {
+                    debugger;
+                    if (response.success) {
+                        
+                       // $("#ReservationModal").modal('hide');
+                        
+                        createToolReservation2(url);
+                    } else {
+                        // If the reservation creation failed, display an error message or handle it appropriately
+                        console.error(response.message);
                     }
-                });
+                },
+                error: function (xhr, status, error) {
+
+                }
+            });
+            return false; // Prevent default form submission
         }
+
+        var createToolReservation2 = function (urlx) {
+            debugger;
+ 
+            $.ajax({
+                type: 'GET',
+                url: urlx,
+                data: "",
+                success: function (response) {
+                    debugger;
+                    
+                        _renderFormCreateToolReservation(response);
+                   
+                },
+                error: function (xhr, status, error) {
+
+                }
+            });
+            return false; // Prevent default form submission
+        }
+
+
+        //var createToolReservation = function (url) {
+        //    debugger;
+
+        //    $.ajax({
+        //        url: url
+        //        })
+        //        .done(function (response) {
+        //            debugger;
+        //            _renderFormCreateToolReservation(response);
+        //        })
+        //        .fail(function (xhr) {
+        //            if (xhr.responseText && JSON.parse(xhr.responseText).Message) {
+        //            }
+        //        });
+
+        //    return false; // Prevent default form submission
+        //}
 
         var handleSuccessCreateToolReservation = function (response) {
             if (response.Success) {
@@ -148,14 +228,18 @@
         }
 
         var handleSuccessCreateReservation = function (response) {
+            debugger;
             if (response.Success) {
-                //EERVScripts.showSuccessMessage(response.Message);
+
                 _CreateReservationModal.modal('hide');
                 location.reload();
             }
             else {
-                //EERVScripts.showAlertWarningMessage(response.Message);
+
             }
         }
+
+
+
     </script>
 }

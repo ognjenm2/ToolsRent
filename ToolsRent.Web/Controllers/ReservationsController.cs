@@ -41,6 +41,25 @@ namespace ToolsRent.Web.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult CreateReservation()
+        {
+            try
+            {
+                // Your reservation creation logic goes here
+                ReservationModel res = new ReservationModel();
+                int reservationID = ReservationsManager.CreateReservation();
+
+                // Assuming the operation was successful, return a success message
+                return Json(new { success = true, message = "Reservation created successfully" });
+            }
+            catch (Exception e)
+            {
+                // If there's an exception, return an error message
+                return Json(new { success = false, message = "Failed to create reservation: " + e.Message });
+            }
+        }
+
 
         [HttpGet]
         public ActionResult CreateReservationModal()

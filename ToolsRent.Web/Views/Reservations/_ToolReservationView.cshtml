@@ -8,20 +8,20 @@
             <div class="form-group">
                 <label>Tip alata</label>
                 <div class="col-12">
-                    @*@Html.DropDownList(Model.ToolType);*@
+                   @* @Html.DropDownList(Model.ToolID);*@
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Datum od:</label>
                 <div class="col-12">
-                    @Html.DisplayFor(m => m.From, new { data_val = "true" })
+                    @Html.DisplayFor(m => m.DateFrom, new { data_val = "true" })
                 </div>
             </div>
             <div class="form-group">
                 <label>Datum do</label>
                 <div class="col-12">
-                    @Html.DisplayFor(m => m.To, new { data_val = "true" })
+                    @Html.DisplayFor(m => m.DateTo, new { data_val = "true" })
                 </div>
             </div>
             <div class="form-group ">

@@ -1,5 +1,5 @@
 ﻿@model ToolsRent.Web.ViewModels.ReservationViewModel
-
+@using ToolsRent.Web.Util
 @Html.HiddenFor(x => x.ReservationID)
 
 <div class="row">
@@ -8,19 +8,22 @@
             <div class="form-group">
                 <label>Ime prezime: </label>
                 <div class="col-12">
-                    @Html.DisplayFor(m => m.ImePrez)
+                    @*@Html.DisplayFor(m => m.ImePrez)*@
+                    @Html.TextBoxFor(x => x.ImePrez, new { @class = "form-control" })
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Datum od:</label>
+                <label>Datum rezervacije:</label>
                 <div class="col-12">
-                    @Html.DisplayFor(m => m.From, new { data_val = "true" })
+                    @*@Html.DisplayFor(m => m.OfferDateStr, new { data_val = "true" })*@
+                    @*@Html.EditorForDate(m => m.OfferDate, false)*@
+                    @Html.TextBoxFor(model => model.OfferDate, new { @class = "datepicker" })
                 </div>
             </div>
 
             <div class="form-group ">
-                <label>Cijena naruđbe:</label>
+                <label>Cijena:</label>
                 <div class="col-12">
                     @Html.DisplayFor(m => m.PriceAll)
                 </div>
@@ -32,8 +35,8 @@
                             data-tooltip='tooltip'
                             data-bs-toggle='modal'
                             data-bs-target='#ToolReservationModal'
-                            onclick='debugger; createToolReservation("@Url.Action( "CreateToolReservationModal", "Reservations")")'>
-                        Dodaj novi alat
+                            onclick='debugger; createAjaxReservation("@Url.Action( "CreateToolReservationModal", "Reservations")")'>
+                        Rezervirani alati
                     </button>
                 </div>
             </div>
@@ -60,7 +63,6 @@
         </table>
     </div>
 </div>
-
 
 
 

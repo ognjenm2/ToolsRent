@@ -18,7 +18,7 @@ namespace ToolsRent.Models
 
         public int PriceAll { get; set; }
 
-
+        public IList<ToolReservationModel> ToolReservations { get; set; }
 
     }
 }

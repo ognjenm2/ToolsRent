@@ -135,6 +135,8 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Translators\ReservationsTranslator.cs" />
+    <Compile Include="Util\HtmlTemplatesExtensions.cs" />
+    <Compile Include="Util\HtmlUtilityExtensions.cs" />
     <Compile Include="ViewModels\ToolReservationViewModel.cs" />
     <Compile Include="ViewModels\ReservationViewModel.cs" />
   </ItemGroup>
