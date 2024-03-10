@@ -18,3 +18,9 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.custom-modal-dialog {
+    max-width: 80%; /* Adjust the width as per your requirement */
+    width: 80%;
+    margin: 1.75rem auto;
+}

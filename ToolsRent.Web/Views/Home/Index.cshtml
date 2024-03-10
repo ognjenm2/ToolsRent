@@ -1,35 +1,54 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
-
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 <main>
     <div class="row">
-        <button href="#!" class="btn btn-primary" id="btnCreate">Unesi rezervaciju</button>
-        <table id="reservations" class="table table-bordered table-hover dataTable no-footer" width="100%">
-            <thead>
-                <tr>
-                    <th>Ime i Prezime</th>
+        <div class="col">
+            <button class='btn btn-warning btn-space btn-sm'
+                    data-tooltip='tooltip'
+                    data-bs-toggle='modal'
+                    data-bs-target='#ReservationModal'
+                    onclick='createReservation("@Url.Action( "CreateReservationModal", "Reservations")")'>
+                Stvori novu rezervaciju
+            </button>
+        </div>
+    </div>
+    <br />
+    <table id="reservations" class="table table-bordered table-hover dataTable table-row-border table-striped  " width="100%">
+        <thead>
+            <tr>
+                <th>Ime i Prezime</th>
 
-                    <th>Datum i vrijeme od</th>
+                <th>Datum rezervacije</th>
 
-                    <th>Napomena</th>
+                <th>Napomena</th>
 
-                    <th>Tip alata</th>
+                <th>Ukupna cijena</th>
 
-                    <th>Akcija</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+                <th>Akcija</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
     </div>
 </main>
+
+@*//modal za create entry*@
+@Html.Partial("~/Views/Reservations/_ReservationModal.cshtml")
+
+@*//modal za create tools entry*@
+@Html.Partial("~/Views/Reservations/_ToolReservationModal.cshtml")
+
+
+
 @section Scripts
 {
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#reservations').DataTable({
-                 "serverSide": true,
+            var table = $('#reservations').DataTable({
+
                  "ajax": {
                      "type": "POST",
                      "url": '@Url.Action("ReservationsHandler","Reservations")',
@@ -39,15 +58,15 @@
                  "drawCallback": function( settings ) {
                      //$.hideLoading();
                  },
-                 "pageLength": 50,
-                 "searchDelay": 400,
-                 "processing": false,
-                 "paging": true,
-                 "deferRender": true,
+                responsive: true,
+
+                paging: true,
+                searching: true,
+                ordering: true,
                  "columns": [{ "data": "ImePrez"  },
-                     { "data": "From" },
+                     { "data": "OfferDateStr" },
                      { "data": "Note" },
-                     { "data": "ToolType" },
+                     { "data": "PriceAll"},
                      {
                          "width": "20px", "orderable": false, "render": function (data, type, row, meta) {
                              var htmlChunk = '' + '<a class="editItem" data-id="' + row.ID + '" href="#"><span class="fa fa-lg fa-pencil"></span></a>';
@@ -58,5 +77,85 @@
                      }]
                  });
         });
+
+
+
+
+//modal scripts
+        var _CreateReservationModal = $("#ReservationModal");
+        var _CreateToolReservationModal = $("#ToolReservationModal");
+
+        var htmlContainerCreateReservation = $("#htmlContainerCreateReservation");
+        var htmlContainerCreateToolReservation = $("#htmlContainerCreateToolReservation");
+
+        _CreateReservationModal.on('hidden.bs.modal', function () {
+            debugger;
+            htmlContainerCreateReservation.html("");
+        });
+
+        var _renderFormCreateReservation = function (response) {
+            debugger;
+            htmlContainerCreateReservation.html(response);
+
+        }
+        var _renderFormCreateToolReservation = function (response) {
+            debugger;
+            htmlContainerCreateToolReservation.html(response);
+
+        }
+
+
+        var createReservation = function (url) {
+            debugger;
+
+            $.ajax({
+                url: url
+            })
+                .done(function (response) {
+                    _renderFormCreateReservation(response);
+                })
+                .fail(function (xhr) {
+                    if (xhr.responseText && JSON.parse(xhr.responseText).Message) {
+                        //EERVScripts.showAlertErrorMessage(JSON.parse(xhr.responseText).Message);
+                    }
+                });
+        }
+
+        var createToolReservation = function (url) {
+            debugger;
+
+            $.ajax({
+                url: url
+            })
+                .done(function (response) {
+                    _renderFormCreateToolReservation(response);
+                })
+                .fail(function (xhr) {
+                    if (xhr.responseText && JSON.parse(xhr.responseText).Message) {
+                    }
+                });
+        }
+
+        var handleSuccessCreateToolReservation = function (response) {
+            if (response.Success) {
+                //EERVScripts.showSuccessMessage(response.Message);
+                _CreateToolReservationModal.modal('hide');
+                location.reload();
+            }
+            else {
+                //EERVScripts.showAlertWarningMessage(response.Message);
+            }
+        }
+
+        var handleSuccessCreateReservation = function (response) {
+            if (response.Success) {
+                //EERVScripts.showSuccessMessage(response.Message);
+                _CreateReservationModal.modal('hide');
+                location.reload();
+            }
+            else {
+                //EERVScripts.showAlertWarningMessage(response.Message);
+            }
+        }
     </script>
 }

@@ -1,0 +1,52 @@
+﻿
+<div id="ReservationModal" class="modal fade" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered custom-modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reservation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body modal-lg">
+                @*@using (Ajax.BeginForm("CreateReservation", "Reservations", new AjaxOptions
+                {
+                    HttpMethod = "POST",
+                    OnSuccess = "handleSuccessCreateReservation",
+                    OnFailure = "handleError"
+                },
+                    new { id = "reservationCreateForm" }))
+                {*@
+
+                    <div id="htmlContainerCreateReservation" style="padding: 0 20px 0 20px;">
+                    </div>
+                @*}*@
+            </div>
+            <div class="modal-footer alert-secondary">
+                @*@Html.SubmitButtonNoLoaderWithConfirm( StringsTable.Save, StringsTable.Confirm_UpdateEmployee, "employeeUpdateForm", "btn btn-success" )
+                    @Html.CancelModalButton()*@
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+     
+            var createToolReservation = function (url) {
+                debugger;
+
+                $.ajax({
+                    url: url
+                })
+                    .done(function (response) {
+                        _renderFormCreateToolReservation(response);
+                    })
+                    .fail(function (xhr) {
+                        if (xhr.responseText && JSON.parse(xhr.responseText).Message) {
+                        }
+                    });
+            }
+        });
+    </script>
+}

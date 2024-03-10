@@ -24,7 +24,7 @@ namespace ToolsRent.Web.Controllers
             try
             {
                 
-                var reservations = ReservationsManager.GetReservations();
+                var reservations = ReservationsManager.GetReservations(param);
 
                 var result = new DTResult<ReservationModel>
                 {
@@ -39,6 +39,21 @@ namespace ToolsRent.Web.Controllers
             {
                 return Json(new { error = e.Message });
             }
+        }
+
+
+        [HttpGet]
+        public ActionResult CreateReservationModal()
+        {
+            //return PartialView("~/Views/Administration/Shared/_EmployeeView.cshtml", viewModel);
+            return PartialView("~/Views/Reservations/_ReservationView.cshtml");
+        }
+
+        
+        [HttpGet]
+        public ActionResult CreateToolReservationModal()
+        {
+            return PartialView("~/Views/Reservations/_ToolReservationView.cshtml");
         }
     }
 }

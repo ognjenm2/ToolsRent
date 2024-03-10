@@ -12,17 +12,18 @@ namespace ToolsRent.Dal.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Tools
+    public partial class Reservations
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Tools()
+        public Reservations()
         {
             this.ToolsReservations = new HashSet<ToolsReservations>();
         }
     
-        public int ID { get; set; }
-        public string ToolKind { get; set; }
-        public Nullable<decimal> Price { get; set; }
+        public int ReservationID { get; set; }
+        public string ImePrezime { get; set; }
+        public Nullable<System.DateTime> OfferDateTime { get; set; }
+        public string Note { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ToolsReservations> ToolsReservations { get; set; }

@@ -12,13 +12,16 @@ namespace ToolsRent.Dal.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ToolReservations
+    public partial class ToolsReservations
     {
-        public int ReservationID { get; set; }
-        public string ImePrezime { get; set; }
-        public Nullable<System.DateTime> DateTimeTo { get; set; }
-        public Nullable<System.DateTime> DateTimeFrom { get; set; }
-        public string Note { get; set; }
-        public string ToolType { get; set; }
+        public int ToolReservationID { get; set; }
+        public Nullable<int> ReservationID { get; set; }
+        public Nullable<int> ToolID { get; set; }
+        public Nullable<System.DateTime> DateFrom { get; set; }
+        public Nullable<System.DateTime> DateTo { get; set; }
+        public Nullable<decimal> Price { get; set; }
+    
+        public virtual Reservations Reservations { get; set; }
+        public virtual Tools Tools { get; set; }
     }
 }

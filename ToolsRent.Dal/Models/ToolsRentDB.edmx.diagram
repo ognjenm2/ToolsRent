@@ -4,9 +4,12 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1fbdefc0aa0d4a5ea1eb22dfec1ba7b0" Name="Diagram1">
-        <EntityTypeShape EntityType="TestDBToolsReservationModel.ToolReservations" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="TestDBToolsReservationModel.Tools" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+      <Diagram DiagramId="5fe6bf222b0546bb98e11c3bc689070e" Name="Diagram1">
+        <EntityTypeShape EntityType="TestDBToolsReservationModel.Reservations" Width="1.5" PointX="0.75" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TestDBToolsReservationModel.Tools" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="TestDBToolsReservationModel.ToolsReservations" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <AssociationConnector Association="TestDBToolsReservationModel.FK__ToolsRese__Reser__5DCAEF64" ManuallyRouted="false" />
+        <AssociationConnector Association="TestDBToolsReservationModel.FK__ToolsRese__ToolI__5EBF139D" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,27 +12,26 @@ namespace ToolsRent.Dal.Reservations
 {
     public class ReservationsDao
     {
-        public static List<ReservationModel> GetReservations()
+        public static List<ReservationModel> GetReservations(string sortOrder, int start, int length)
         {
-            using (TestDBToolsReservationEntities db = new TestDBToolsReservationEntities())
+            using (Entities db = new Entities())
             {
                 List<ReservationModel> reservationList = new List<ReservationModel>();
                 try
                 {
-                    var query = db.ToolReservations.AsQueryable();
+                    var query = db.Reservations.AsQueryable();
 
+                    //var data = query.OrderBy(x=>x.ReservationID).Skip(start).Take(length).ToList();
                     var data = query.ToList();
-
-                    foreach (ToolReservations toolRes in data)
+                    foreach (ToolsRent.Dal.Models.Reservations res in data)
                     {
                         reservationList.Add(new ReservationModel
                         {
-                            ImePrez = toolRes.ImePrezime,
-                            From = toolRes.DateTimeFrom.Value,
-                            To = toolRes.DateTimeTo.Value,
-                            Note = toolRes.Note,
-                            ToolType = toolRes.ToolType
-                        });
+                            ImePrez = res.ImePrezime,
+                            OfferDate = res.OfferDateTime.Value,
+                            OfferDateStr = res.OfferDateTime.Value.ToString("dd.MM.yyyy."),
+                            Note = res.Note
+                        }); ;
                     }
                 }
                 catch (Exception ex)

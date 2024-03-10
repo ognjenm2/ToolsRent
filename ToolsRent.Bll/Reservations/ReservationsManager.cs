@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using ToolsRent.Dal.Models;
 using ToolsRent.Dal.Reservations;
 using ToolsRent.Models;
 namespace ToolsRent.Bll.Reservations
 {
     public class ReservationsManager
     {
-        public static List<ReservationModel> GetReservations()
+        public static List<ReservationModel> GetReservations(DTParameters param)
         {
             List<ReservationModel> reservations = new List<ReservationModel>();
             try
             {
-                reservations = ReservationsDao.GetReservations();
+                
+                reservations = ReservationsDao.GetReservations(param.SortOrder, param.Start, param.Length);
             }
             catch (Exception ex)
             {

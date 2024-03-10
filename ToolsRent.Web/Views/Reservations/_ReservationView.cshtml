@@ -1,0 +1,66 @@
+﻿@model ToolsRent.Web.ViewModels.ReservationViewModel
+
+@Html.HiddenFor(x => x.ReservationID)
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <fieldset class="with-border-light">
+            <div class="form-group">
+                <label>Ime prezime: </label>
+                <div class="col-12">
+                    @Html.DisplayFor(m => m.ImePrez)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Datum od:</label>
+                <div class="col-12">
+                    @Html.DisplayFor(m => m.From, new { data_val = "true" })
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label>Cijena naruđbe:</label>
+                <div class="col-12">
+                    @Html.DisplayFor(m => m.PriceAll)
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col">
+                    <button class='btn btn-warning btn-space btn-sm'
+                            data-tooltip='tooltip'
+                            data-bs-toggle='modal'
+                            data-bs-target='#ToolReservationModal'
+                            onclick='debugger; createToolReservation("@Url.Action( "CreateToolReservationModal", "Reservations")")'>
+                        Dodaj novi alat
+                    </button>
+                </div>
+            </div>
+            <br />
+        </fieldset>
+        <table id="reservations" class="table table-bordered table-hover dataTable no-footer" width="100%">
+            <thead>
+                <tr>
+
+                    <th>Tip alata</th>
+
+                    <th>Datum od</th>
+
+                    <th>Datum do</th>
+
+                    <th>Napomena</th>
+
+                    <th>Jedinična cijena</th>
+
+                    <th>Akcija</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+
+
+

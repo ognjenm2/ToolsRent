@@ -1,0 +1,42 @@
+﻿@model ToolsRent.Web.ViewModels.ToolReservationViewModel
+
+@Html.HiddenFor(x => x.ReservationID)
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <fieldset class="with-border-light">
+            <div class="form-group">
+                <label>Tip alata</label>
+                <div class="col-12">
+                    @*@Html.DropDownList(Model.ToolType);*@
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Datum od:</label>
+                <div class="col-12">
+                    @Html.DisplayFor(m => m.From, new { data_val = "true" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Datum do</label>
+                <div class="col-12">
+                    @Html.DisplayFor(m => m.To, new { data_val = "true" })
+                </div>
+            </div>
+            <div class="form-group ">
+                <label>Cijena alata:</label>
+                <div class="col-12">
+                    @Html.DisplayFor(m => m.Price)
+                </div>
+            </div>
+            <br />
+
+            <br />
+        </fieldset>
+      
+    </div>
+</div>
+
+
+

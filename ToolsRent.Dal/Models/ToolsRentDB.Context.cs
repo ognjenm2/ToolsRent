@@ -13,10 +13,10 @@ namespace ToolsRent.Dal.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class TestDBToolsReservationEntities : DbContext
+    public partial class Entities : DbContext
     {
-        public TestDBToolsReservationEntities()
-            : base("name=TestDBToolsReservationEntities")
+        public Entities()
+            : base("name=Entities")
         {
         }
     
@@ -25,7 +25,8 @@ namespace ToolsRent.Dal.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<ToolReservations> ToolReservations { get; set; }
+        public virtual DbSet<Reservations> Reservations { get; set; }
         public virtual DbSet<Tools> Tools { get; set; }
+        public virtual DbSet<ToolsReservations> ToolsReservations { get; set; }
     }
 }
