@@ -19,6 +19,8 @@
     <table id="reservations" class="table table-bordered table-hover dataTable table-row-border table-striped  " width="100%">
         <thead>
             <tr>
+                <th>Broj Rezervacije</th>
+
                 <th>Ime i Prezime</th>
 
                 <th>Datum rezervacije</th>
@@ -68,14 +70,16 @@
                 paging: true,
                 searching: true,
                 ordering: true,
-                 "columns": [{ "data": "ImePrez"  },
+                 "columns": [
+                     { "data": "ReservationID"},
+                     { "data": "ImePrez"  },
                      { "data": "OfferDateStr" },
                      { "data": "Note" },
                      { "data": "PriceAll"},
                      {
                          "width": "20px", "orderable": false, "render": function (data, type, row, meta) {
-                             var htmlChunk = '' + '<a class="editItem" data-id="' + row.ID + '" href="#"><span class="fa fa-lg fa-pencil"></span></a>';
-                             htmlChunk += '<a class="deleteItem" data-id="' + row.ID + '" href="#"><span class="fa fa-lg fa-trash" style="padding-top:10px"></span></a>';
+                             var htmlChunk = '' + '<a class="editRes" data-id="' + row.ID + '" href="#"><span class="fa fa-lg fa-pencil"></span></a>';
+                             htmlChunk += '<a class="deleteRes" data-id="' + row.ID + '" href="#"><span class="fa fa-lg fa-trash" style="padding-top:10px"></span></a>';
 
                              return htmlChunk;
                          }
@@ -84,7 +88,6 @@
 
 
         });
-
 
 
 
@@ -158,6 +161,16 @@
             debugger;
 
             if (reservationID == 0) {
+
+                var imePrez = $("#ImePrez").val();
+                var offerDate = $("#OfferDate").val();
+
+                if (!imePrez || !offerDate) {
+                    // If any field is empty, show an alert or error message
+                    alert("Molimo vas popunite sva polja.");
+                    return false; // Prevent form submission
+                }
+
                 var resForm = $("#reservationCreateForm");
                 var formData = resForm.serialize();
                 $.ajax({
@@ -166,7 +179,7 @@
                     data: formData,
                     success: function (response) {
                         if (response.success) {
-                            reservationID = response.reservationID; 
+                            reservationID = response.reservationID;
                             createToolReservation2(url, response.reservationID);
                         } else {
 
@@ -184,6 +197,16 @@
 
 
         var createToolReservation = function (url) {
+
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            var price = $("#Price").val();
+
+            if (!dateFrom || !dateTo || !price) {
+                // If any field is empty, show an alert or error message
+                alert("Molimo vas popunite sva polja.");
+                return false; // Prevent form submission
+            }
              var toolID = $("#toolTypeSelect").val();
             $("#ToolID").val(toolID);
             var resForm = $("#toolReservationCreateForm");
@@ -195,7 +218,7 @@
                 success: function (response) {
                     debugger;
                     if (response.success) {
-                        debugger;                        
+                        debugger;
                         _CreateToolReservationModal.modal('hide');
                         _CreateReservationModal.modal('show');
                         fillReservation("", response.reservationID);
@@ -293,7 +316,10 @@
                         return htmlChunk;
                     }
                 }]
-            });            
+            });
         }
+ 
+
+
     </script>
 }

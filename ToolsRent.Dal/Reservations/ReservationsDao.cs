@@ -125,6 +125,7 @@ namespace ToolsRent.Dal.Reservations
                     {
                         reservationList.Add(new ReservationModel
                         {
+                            ReservationID = res.ReservationID,
                             ImePrez = res.ImePrezime,
                             OfferDate = res.OfferDateTime.Value,
                             OfferDateStr = res.OfferDateTime.Value.ToString("dd.MM.yyyy."),

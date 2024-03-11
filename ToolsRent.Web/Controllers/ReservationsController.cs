@@ -96,8 +96,7 @@ namespace ToolsRent.Web.Controllers
         [HttpGet]
         public ActionResult CreateReservationModal()
         {
-            //return PartialView("~/Views/Administration/Shared/_EmployeeView.cshtml", viewModel);
-            return PartialView("~/Views/Reservations/_ReservationView.cshtml");
+           return PartialView("~/Views/Reservations/_ReservationView.cshtml");
         }
 
 
@@ -113,7 +112,7 @@ namespace ToolsRent.Web.Controllers
         [HttpGet]
         public ActionResult GetToolTypes()
         {
-            using (var db = new Entities()) // Adjust the DbContext name
+            using (var db = new Entities()) 
             {
                 var toolTypes = db.Tools
                                   .Select(t => new {
@@ -121,7 +120,7 @@ namespace ToolsRent.Web.Controllers
                                       t.ToolKind,
                                       t.Price
                                   })
-                                  .Take(1000).ToList();
+                                  .Take(5000).ToList();
 
                 return Json(toolTypes, JsonRequestBehavior.AllowGet);
             }
