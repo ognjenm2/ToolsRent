@@ -35,14 +35,14 @@
                             data-tooltip='tooltip'
                             data-bs-toggle='modal'
                             data-bs-target='#ToolReservationModal'
-                            onclick='debugger; createAjaxReservation("@Url.Action( "CreateToolReservationModal", "Reservations")")'>
-                        Rezervirani alati
+                            onclick='createAjaxReservation("@Url.Action( "CreateToolReservationModal", "Reservations")")'>
+                        Rezerviraj alat
                     </button>
                 </div>
             </div>
             <br />
         </fieldset>
-        <table id="reservations" class="table table-bordered table-hover dataTable no-footer" width="100%">
+        <table id="toolReservationsForReservation" class="table table-bordered table-hover dataTable table-row-border table-striped  " width="100%">
             <thead>
                 <tr>
 
@@ -51,8 +51,6 @@
                     <th>Datum od</th>
 
                     <th>Datum do</th>
-
-                    <th>Napomena</th>
 
                     <th>Jedinična cijena</th>
 
@@ -63,6 +61,5 @@
         </table>
     </div>
 </div>
-
 
 

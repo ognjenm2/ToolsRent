@@ -1,42 +1,60 @@
 ﻿@model ToolsRent.Web.ViewModels.ToolReservationViewModel
 
-@Html.HiddenFor(x => x.ReservationID)
-
+@Html.HiddenFor(x => x.ReservationID, new { Value = ViewBag.ReservationID })
+@Html.HiddenFor(x => x.ToolID)
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <fieldset class="with-border-light">
             <div class="form-group">
-                <label>Tip alata</label>
+                <label>Broj rezervacije: @ViewBag.ReservationID</label>
+            </div>
+            <div class="form-group">
                 <div class="col-12">
-                   @* @Html.DropDownList(Model.ToolID);*@
+                    <label for="toolType">Tip alata:</label>
+                    <select id="toolTypeSelect" class="form-control" style="width: 100%;"></select>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Datum od:</label>
                 <div class="col-12">
-                    @Html.DisplayFor(m => m.DateFrom, new { data_val = "true" })
+                    <input type="date" id="dateFrom" name="dateFrom">
                 </div>
             </div>
             <div class="form-group">
                 <label>Datum do</label>
                 <div class="col-12">
-                    @Html.DisplayFor(m => m.DateTo, new { data_val = "true" })
+                    <input type="date" id="dateTo" name="dateTo">
                 </div>
             </div>
             <div class="form-group ">
                 <label>Cijena alata:</label>
                 <div class="col-12">
-                    @Html.DisplayFor(m => m.Price)
+                    <input type="text" id="Price" name="Price">
                 </div>
             </div>
             <br />
-
+            <div class="row">
+                <div class="col">
+                    <button class='btn btn-warning btn-space btn-sm'
+                            onclick='createToolReservation("@Url.Action( "CreateToolReservation", "Reservations")")'>
+                        Rezerviraj
+                    </button>
+                </div>
+            </div>
             <br />
         </fieldset>
-      
+
     </div>
 </div>
+
+
+
+
+
+
+
+
 
 
 

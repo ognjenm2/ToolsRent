@@ -3,27 +3,22 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Tool Reservation</h5>
+                <h5 class="modal-title">Rezervacija alata</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                @*@using (Ajax.BeginForm("CreateReservation", "Reservations", new AjaxOptions
-                    {
-                        HttpMethod = "POST",
-                        OnSuccess = "handleSuccessCreateToolReservation",
-                        OnFailure = "handleError"
-                    },
-                        new { id = "toolRreservationCreateForm" }))
-                    {*@
+                @using (Html.BeginForm("CreateToolReservation", "Reservations", null, FormMethod.Post, new { id = "toolReservationCreateForm" }))
+                {
 
-                <div id="htmlContainerCreateToolReservation" style="padding: 0 20px 0 20px;">
-                </div>
-                @*}*@
+                    <div id="htmlContainerCreateToolReservation" style="padding: 0 20px 0 20px;">
+                    </div>
+                }
             </div>
             <div class="modal-footer alert-secondary">
-                @*@Html.SubmitButtonNoLoaderWithConfirm( StringsTable.Save, StringsTable.Confirm_UpdateEmployee, "employeeUpdateForm", "btn btn-success" )
-                    @Html.CancelModalButton()*@
             </div>
         </div>
     </div>
 </div>
+
+
+
