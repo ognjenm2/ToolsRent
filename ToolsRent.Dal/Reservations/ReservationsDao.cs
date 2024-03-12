@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using ToolsRent.Dal.Models;
 using ToolsRent.Models;
 
@@ -77,6 +78,64 @@ namespace ToolsRent.Dal.Reservations
             }
         }
 
+        public static void DeleteToolReservation(int toolReservationID, int reservationID)
+        {
+            using (Entities db = new Entities())
+            {
+                
+                try
+                {
+                var toolReservation = db.ToolsReservations
+               .Where(tr => tr.ToolReservationID == toolReservationID && tr.ReservationID == reservationID)
+               .FirstOrDefault();
+
+                    if (toolReservation != null)
+                    {
+                        
+                        db.ToolsReservations.Remove(toolReservation);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new Exception("Tool reservation not found for deletion.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Error  hand
+                }
+                 
+            }
+        }
+
+
+        public static void DeleteReservation(int reservationID)
+        {
+            using (Entities db = new Entities())
+            {
+                try
+                {
+                    // Find and delete all tool reservations associated with the given reservationID
+                    var toolReservationsToDelete = db.ToolsReservations.Where(tr => tr.ReservationID == reservationID);
+                    db.ToolsReservations.RemoveRange(toolReservationsToDelete);
+
+                    // Find and delete the reservation itself
+                    var reservationToDelete = db.Reservations.Find(reservationID);
+                    if (reservationToDelete != null)
+                    {
+                        db.Reservations.Remove(reservationToDelete);
+                    }
+
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    // Handle the exception
+                    throw new Exception("Error deleting tool reservations and reservation: " + ex.Message);
+                }
+            }
+        }
+
         public static List<ToolReservationModel> GetReseGetToolReservationsByReservationIDrvations(int reservationID)
         {
             using (Entities db = new Entities())
@@ -101,6 +160,34 @@ namespace ToolsRent.Dal.Reservations
                             Price = res.Price.Value
                         }); 
                     }
+                }
+                catch (Exception ex)
+                {
+                    //Error  hand
+                }
+                return reservationList;
+            }
+        }
+
+        
+        public static ReservationModel GetReservationByID(int reservationID)
+        {
+            using (Entities db = new Entities())
+            {
+                ReservationModel reservationList = new ReservationModel();
+                try
+                {
+                    var query = db.Reservations.AsQueryable();
+                    var data = query.Where(x => x.ReservationID == reservationID).SingleOrDefault();                   
+                     return new ReservationModel
+                        {
+                            ReservationID = data.ReservationID,
+                            ImePrez = data.ImePrezime,
+                            OfferDate = data.OfferDateTime.Value,
+                            OfferDateStr = data.OfferDateTime.Value.ToString("dd.MM.yyyy."),
+                            Note = data.Note
+                        };
+                    
                 }
                 catch (Exception ex)
                 {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -39,6 +40,57 @@ namespace ToolsRent.Web.Controllers
             catch (Exception e)
             {
                 return Json(new { error = e.Message });
+            }
+        }
+
+        
+        public JsonResult GetReservationByID(int reservationID)
+        {
+            try
+            {
+                var reservation = ReservationsManager.GetReservationByID(reservationID);
+
+                 
+
+                return Json(reservation, JsonRequestBehavior.AllowGet);
+
+            
+            }
+            catch (Exception e)
+            {
+                return Json(new { error = e.Message });
+            }
+        }
+
+        [HttpGet]
+        public ActionResult DeleteToolReservationFromReservation(int toolReservationID, int reservationID)
+        {
+            try
+            {
+                ReservationsManager.DeleteToolReservation(toolReservationID, reservationID);
+
+                // Assuming successful deletion
+                return Json(new { success = true, message = "Tool reservation deleted successfully" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                // Handle exception if deletion fails
+                return Json(new { success = false, message = "Failed to delete tool reservation: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult DeleteReservation(int reservationID)
+        {
+            try
+            {
+                ReservationsManager.DeleteReservation(reservationID);
+
+                return Json(new { success = true, message = "Reservation and associated tool reservations deleted successfully." }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "An error occurred while deleting reservation: " + ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -94,14 +146,14 @@ namespace ToolsRent.Web.Controllers
 
 
         [HttpGet]
-        public ActionResult CreateReservationModal()
+        public ActionResult InjectReservationView()
         {
            return PartialView("~/Views/Reservations/_ReservationView.cshtml");
         }
 
 
         [HttpGet]
-        public ActionResult CreateToolReservationModal(int reservationID)
+        public ActionResult InjectToolReservationView(int reservationID)
         {
             // Pass the reservation ID to the partial view
             ViewBag.ReservationID = reservationID;
@@ -126,6 +178,46 @@ namespace ToolsRent.Web.Controllers
             }
         }
 
+        public ActionResult GetToolTypesSelect2(string search, int page)
+        {
+            using (var db = new Entities())
+            {
+                // Determine the number of items to skip based on the page number
+                int pageSize = 50; // Adjust the page size as needed
+                int skipCount = (page - 1) * pageSize;
+
+                // Query for tool types based on the search term (if provided)
+                var toolTypesQuery = db.Tools.Select(t => new
+                {
+                    id = t.ID,
+                    text = t.ToolKind + "        €" + t.Price
+                });
+
+                // Filter by search term
+                if (!string.IsNullOrEmpty(search))
+                {
+                    toolTypesQuery = toolTypesQuery.Where(t => t.text.Contains(search));
+                }
+
+                // Perform pagination by skipping and taking the appropriate number of results
+                var toolTypes = toolTypesQuery.OrderBy(t => t.text)
+                                              .Skip(skipCount)
+                                              .Take(pageSize)
+                                              .ToList();
+
+                // Construct the JSON response with the 'results' key
+                var jsonResponse = new
+                {
+                    results = toolTypes,
+                    pagination = new
+                    {
+                        more = toolTypes.Count == pageSize // Indicates if more results are available
+                    }
+                };
+
+                return Json(jsonResponse, JsonRequestBehavior.AllowGet);
+            }
+        }
 
 
         [HttpPost]

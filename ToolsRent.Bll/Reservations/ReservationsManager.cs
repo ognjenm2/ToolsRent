@@ -37,6 +37,44 @@ namespace ToolsRent.Bll.Reservations
             return resID;
         }
 
+        public static void DeleteReservation(int reservationID)
+        {
+            try
+            {
+                ReservationsDao.DeleteReservation(reservationID);
+            }
+            catch (Exception ex)
+            {
+                //error handler
+            }
+        }
+
+        public static void DeleteToolReservation(int toolReservationID, int reservationID)
+        {
+            try
+            {
+                ReservationsDao.DeleteToolReservation(toolReservationID, reservationID);
+            }
+            catch (Exception ex)
+            {
+                //error handler
+            }
+        }
+
+        public static object GetReservationByID(int reservationID)
+        {
+            ReservationModel reservations = null;
+            try
+            {
+                reservations = ReservationsDao.GetReservationByID(reservationID);
+            }
+            catch (Exception ex)
+            {
+                //error handler
+            }
+            return reservations;
+        }
+
         public static List<ReservationModel> GetReservations(DTParameters param)
         {
             List<ReservationModel> reservations = new List<ReservationModel>();

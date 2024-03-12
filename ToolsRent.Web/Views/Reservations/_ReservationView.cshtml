@@ -8,7 +8,6 @@
             <div class="form-group">
                 <label>Ime prezime: </label>
                 <div class="col-12">
-                    @*@Html.DisplayFor(m => m.ImePrez)*@
                     @Html.TextBoxFor(x => x.ImePrez, new { @class = "form-control" })
                 </div>
             </div>
@@ -16,12 +15,9 @@
             <div class="form-group">
                 <label>Datum rezervacije:</label>
                 <div class="col-12">
-                    @*@Html.DisplayFor(m => m.OfferDateStr, new { data_val = "true" })*@
-                    @*@Html.EditorForDate(m => m.OfferDate, false)*@
                     @Html.TextBoxFor(model => model.OfferDate, new { @class = "datepicker" })
                 </div>
             </div>
-
             <div class="form-group ">
                 <label>Cijena:</label>
                 <div class="col-12">
@@ -35,7 +31,7 @@
                             data-tooltip='tooltip'
                             data-bs-toggle='modal'
                             data-bs-target='#ToolReservationModal'
-                            onclick='createAjaxReservation("@Url.Action( "CreateToolReservationModal", "Reservations")")'>
+                            onclick='createReservation()'>
                         Rezerviraj alat
                     </button>
                 </div>
