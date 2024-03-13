@@ -195,6 +195,10 @@
             } else {
                 //else just raise modal for adding tools
                 debugger;
+                $("#ImePrez").prop('disabled', true);
+                $("#OfferDate").prop('disabled', true);
+                $("#Note").prop('disabled', true);
+                $("#PriceAll").prop('disabled', true);
                 newToolReservationModal(reservationID_Global);
                 table.ajax.reload();
             }
@@ -438,6 +442,12 @@
             $("#OfferDate").val(response.OfferDate);
             $("#Note").val(response.Note);
             $("#PriceAll").val(response.PriceAll);
+
+            $("#ImePrez").prop('disabled', true);
+            $("#OfferDate").prop('disabled', true);
+            $("#Note").prop('disabled', true);
+            $("#PriceAll").prop('disabled', true);
+            
 
             //Reinitialize Datatable
             if ($.fn.DataTable.isDataTable('#toolReservationsForReservation')) {
