@@ -1,12 +1,8 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
 using ToolsRent.Dal.Models;
 using ToolsRent.Models;
 
@@ -18,15 +14,22 @@ namespace ToolsRent.Dal.Reservations
         {
             using (Entities db = new Entities())
             {
-                 
                 try
                 {
 
-                      ToolsRent.Dal.Models.Reservations reservation = new ToolsRent.Dal.Models.Reservations
+                    string format = "dd/MM/yyyy HH:mm:ss";
+
+                    DateTime dateOffer;
+                    DateTime.TryParseExact(res.OfferDate, format,
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out dateOffer);
+
+                    ToolsRent.Dal.Models.Reservations reservation = new ToolsRent.Dal.Models.Reservations
                     {
                         ImePrezime = res.ImePrez,  
-                        OfferDateTime = res.OfferDate, 
-                        Note = res.Note 
+                        OfferDateTime = dateOffer, 
+                        Note = res.Note,
+                        PriceAll = res.PriceAll
                     };
 
                     // Add the new reservation entity to the database context
@@ -40,9 +43,9 @@ namespace ToolsRent.Dal.Reservations
                 }
                 catch (Exception ex)
                 {
+                    Log.Error(ex, "Error occured");
                     return 0;
                 }
-
             }
         }
 
@@ -52,16 +55,27 @@ namespace ToolsRent.Dal.Reservations
             {
                 try
                 {
+                    string format = "dd/MM/yyyy HH:mm:ss";
+
+                    DateTime dateTo;
+                        DateTime.TryParseExact(tool.DateTo, format, 
+                        System.Globalization.CultureInfo.InvariantCulture, 
+                        System.Globalization.DateTimeStyles.None, out dateTo);
+
+                    DateTime dateFrom;
+                    DateTime.TryParseExact(tool.DateFrom, format,
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out dateFrom);
+
                     ToolsRent.Dal.Models.ToolsReservations toolRes = new ToolsRent.Dal.Models.ToolsReservations
                     {
                         ReservationID = tool.ReservationID,
                         ToolID = tool.ToolID,
-                        DateFrom = DateTime.Parse(tool.DateFrom),  
-                        DateTo = DateTime.Parse(tool.DateTo),  
+                        DateFrom = dateFrom,  
+                        DateTo = dateTo,  
                         Price = tool.Price
                     };
 
-                    // Add the new reservation entity to the database context
                     db.ToolsReservations.Add(toolRes);
 
                     // Save changes to the database
@@ -72,6 +86,7 @@ namespace ToolsRent.Dal.Reservations
                 }
                 catch (Exception ex)
                 {
+                    Log.Error(ex, "Error occured");
                     return 0;
                 }
 
@@ -81,8 +96,7 @@ namespace ToolsRent.Dal.Reservations
         public static void DeleteToolReservation(int toolReservationID, int reservationID)
         {
             using (Entities db = new Entities())
-            {
-                
+            { 
                 try
                 {
                 var toolReservation = db.ToolsReservations
@@ -93,6 +107,21 @@ namespace ToolsRent.Dal.Reservations
                     {
                         
                         db.ToolsReservations.Remove(toolReservation);
+
+
+                        var totalPrice = db.ToolsReservations
+                       .Where(tr => tr.ReservationID == reservationID)
+                       .Sum(tr => tr.Price) ?? 0;
+
+                        var reservationToUpdate = db.Reservations.Find(reservationID);
+                        if (reservationToUpdate != null)
+                        {
+                            reservationToUpdate.PriceAll = totalPrice;
+                            db.Entry(reservationToUpdate).State = EntityState.Modified;
+                        }
+
+
+
                         db.SaveChanges();
                     }
                     else
@@ -102,11 +131,43 @@ namespace ToolsRent.Dal.Reservations
                 }
                 catch (Exception ex)
                 {
-                    //Error  hand
+                    Log.Error(ex, "Error occured");
                 }
                  
             }
         }
+
+
+
+        public static void RefreshPriceAllsFporReservationID(int reservationID)
+        {
+            using (Entities db = new Entities())
+            {
+                try
+                {
+                   
+                    var totalPrice = db.ToolsReservations
+                    .Where(tr => tr.ReservationID == reservationID)
+                    .Sum(tr => tr.Price) ?? 0;
+
+                    var reservationToUpdate = db.Reservations.Find(reservationID);
+                    if (reservationToUpdate != null)
+                    {
+                        reservationToUpdate.PriceAll = totalPrice;
+                        db.Entry(reservationToUpdate).State = EntityState.Modified;
+                    }
+
+                    db.SaveChanges();
+                    
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Error occured");
+                }
+
+            }
+        }
+
 
 
         public static void DeleteReservation(int reservationID)
@@ -130,13 +191,12 @@ namespace ToolsRent.Dal.Reservations
                 }
                 catch (Exception ex)
                 {
-                    // Handle the exception
                     throw new Exception("Error deleting tool reservations and reservation: " + ex.Message);
                 }
             }
         }
 
-        public static List<ToolReservationModel> GetReseGetToolReservationsByReservationIDrvations(int reservationID)
+        public static List<ToolReservationModel> GetToolReservationsByReservationID(int reservationID)
         {
             using (Entities db = new Entities())
             {
@@ -155,15 +215,15 @@ namespace ToolsRent.Dal.Reservations
                             ReservationID = res.ReservationID.Value,
                             ToolID = res.ToolID.Value,
                             ToolType = res.Tools.ToolKind,
-                            DateFrom = res.DateFrom.Value.ToString("dd.MM.yyyy."),
-                            DateTo = res.DateTo.Value.ToString("dd.MM.yyyy."),
+                            DateFrom = res.DateFrom.Value.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
+                            DateTo = res.DateTo.Value.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
                             Price = res.Price.Value
                         }); 
                     }
                 }
                 catch (Exception ex)
                 {
-                    //Error  hand
+                    Log.Error(ex, "Error occured");
                 }
                 return reservationList;
             }
@@ -178,20 +238,20 @@ namespace ToolsRent.Dal.Reservations
                 try
                 {
                     var query = db.Reservations.AsQueryable();
-                    var data = query.Where(x => x.ReservationID == reservationID).SingleOrDefault();                   
-                     return new ReservationModel
-                        {
-                            ReservationID = data.ReservationID,
-                            ImePrez = data.ImePrezime,
-                            OfferDate = data.OfferDateTime.Value,
-                            OfferDateStr = data.OfferDateTime.Value.ToString("dd.MM.yyyy."),
-                            Note = data.Note
+                    var data = query.Where(x => x.ReservationID == reservationID).SingleOrDefault();
+                    return new ReservationModel
+                    {
+                        ReservationID = data.ReservationID,
+                        ImePrez = data.ImePrezime,
+                        OfferDate = data.OfferDateTime.Value.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
+                        Note = data.Note,
+                        PriceAll = data.PriceAll.Value
                         };
                     
                 }
                 catch (Exception ex)
                 {
-                    //Error  hand
+                    Log.Error(ex, "Error occured");
                 }
                 return reservationList;
             }
@@ -205,7 +265,6 @@ namespace ToolsRent.Dal.Reservations
                 try
                 {
                     var query = db.Reservations.AsQueryable();
-
                     //var data = query.OrderBy(x=>x.ReservationID).Skip(start).Take(length).ToList();
                     var data = query.ToList();
                     foreach (ToolsRent.Dal.Models.Reservations res in data)
@@ -214,15 +273,15 @@ namespace ToolsRent.Dal.Reservations
                         {
                             ReservationID = res.ReservationID,
                             ImePrez = res.ImePrezime,
-                            OfferDate = res.OfferDateTime.Value,
-                            OfferDateStr = res.OfferDateTime.Value.ToString("dd.MM.yyyy."),
-                            Note = res.Note
+                            OfferDate = res.OfferDateTime.Value.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
+                            Note = res.Note,
+                            PriceAll = res.PriceAll.Value
                         }); ;
                     }
                 }
                 catch (Exception ex)
                 {
-                    //Error  hand
+                    Log.Error(ex, "Error occured");
                 }
                 return reservationList;
             }

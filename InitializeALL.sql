@@ -37,7 +37,8 @@ CREATE TABLE Reservations (
     ReservationID INT IDENTITY(1,1) PRIMARY KEY,
     ImePrezime NVARCHAR(255),
     OfferDateTime DATETIME,
-    Note NVARCHAR(MAX)
+    Note NVARCHAR(MAX),
+    PriceAll DECIMAL(10,2)
 );
 
 CREATE TABLE ToolsReservations (
@@ -110,3 +111,32 @@ BEGIN
 
     SET @ReservationCounter = @ReservationCounter + 1;
 END;
+
+DECLARE @minPrice DECIMAL(10, 2) = 1000;
+DECLARE @maxPrice DECIMAL(10, 2) = 10000;
+DECLARE @reservationID INT;
+DECLARE @randomPrice2 DECIMAL(10, 2);
+
+DECLARE priceCursor CURSOR FOR
+SELECT [ReservationID]
+FROM [TestDBToolsReservation].[dbo].[Reservations]
+ORDER BY NEWID(); 
+
+OPEN priceCursor;
+
+FETCH NEXT FROM priceCursor INTO @reservationID;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+     
+    SET @randomPrice2 = ROUND((@maxPrice - @minPrice) * RAND() + @minPrice, 2);
+
+    UPDATE [TestDBToolsReservation].[dbo].[Reservations]
+    SET [PriceAll] = @randomPrice2
+    WHERE [ReservationID] = @reservationID;
+
+    FETCH NEXT FROM priceCursor INTO @reservationID;
+END
+
+CLOSE priceCursor;
+DEALLOCATE priceCursor;

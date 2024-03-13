@@ -4,6 +4,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
 <main>
     <div class="row">
         <div class="col">
@@ -50,17 +51,18 @@
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
 
     <script type="text/javascript">
-        ///********************* */
+        ///**********************/
         var reservationID_Global = 0;
         var table;
         var price_Global = 0;
-        ///********************* */
+        var priceDateAdjusted = 0;
+        ///**********************/
 
         $(document).ready(function () {
-            debugger;
-            
             var action = '@Url.Action("ReservationsHandler","Reservations")';
             table = $('#reservations').DataTable({
                 "ajax": {
@@ -70,7 +72,7 @@
                     'data': function (data) { return data = JSON.stringify(data); }
                 },
                 "drawCallback": function( settings ) {
-                    //$.hideLoading();
+
                 },
                 responsive: true,
 
@@ -80,14 +82,14 @@
                 "columns": [
                     { "data": "ReservationID"},
                     { "data": "ImePrez"  },
-                    { "data": "OfferDateStr" },
+                    { "data": "OfferDate" },
                     { "data": "Note" },
                     { "data": "PriceAll"},
                     {
                         "width": "20px",
                         "orderable": false,
                         "render": function (data, type, row, meta) {
-                            
+
                             var htmlChunk = '' + '<a class="editRes" data-id="' + row.ReservationID + '" href="#"><span class="fa fa-lg fa-pencil"></span></a>';
                             htmlChunk += '<a class="deleteItem" data-delete-data="' + row.ReservationID + '" href="#" onclick="deleteReservation(' + row.ReservationID + ')"><span class="fa fa-lg fa-trash" style="padding-top:10px"></span></a>';
 
@@ -97,11 +99,10 @@
                 ]
             });
             $('#reservations').on('click', '.editRes', function (e) {
-                debugger;
                 _ReservationModal.modal('show');
                 var reservationID = $(this).data('id');
                 editReservation(reservationID);
-            }); 
+            });
         });
 
         //modal 1 - reservation modal
@@ -112,21 +113,15 @@
         var _htmlContainerToolReservation = $("#htmlContainerToolReservation");
 
         var deleteReservation = function (reservationID) {
-            debugger;
             $.ajax({
                 type: 'GET',
                 url: '/Reservations/DeleteReservation',
                 data: { reservationID: reservationID },
                 success: function (response) {
-                    debugger;
-                    //$('#reservationCreateForm').on('submit', function (e) {
-                    //    e.preventDefault();
-                    //});
                     table.ajax.reload();
                 },
                 error: function (xhr, status, error) {
-                    // Handle error
-                    console.error(error);
+                    alert("Error deleting reservation.");
                 }
             });
             return false; // Prevent the default form submission behavior
@@ -134,10 +129,9 @@
 
         //reservation modal
         var newReservationModal = function () {
-            reservationID_Global = 0;
-            debugger;
+            reservationID_Global = 0;//allways when we click create new we don need to remember nothing
             action = "@Url.Action( "InjectReservationView", "Reservations")"
-            
+
             $.ajax({
                 url: action
             }).done(function (response) {
@@ -145,75 +139,93 @@
                     $('#reservationCreateForm').on('submit', function (e) {
                         e.preventDefault();
                     });
+                    debugger;
+                    $('#OfferDate').datetimepicker({
+                        format: 'd/m/Y H:i:s',
+                        onClose: function (dateText, inst) {
+                            debugger;
+                            
+                            
+                        }
+                    });
+                $('#PriceAll').prop('disabled', true);
                 }).fail(function (xhr) {
-                    if (xhr.responseText && JSON.parse(xhr.responseText).Message) {
-
-                    }
+                    alert("Error 1.");
                 });
             return false;
         }
 
         var createReservation = function () {
-            //call this after reservation offer has been created to add first tool
-            var action = "@Url.Action("InjectToolReservationView", "Reservations")";
+            // if first time and offer was not created save offer to DB
             debugger;
-            // if first time and offer was not created and first tool not set
             if (reservationID_Global == 0) {
                 var imePrez = $("#ImePrez").val();
                 var offerDate = $("#OfferDate").val();
+                //var note = $("#OfferDate").val();
+                //var priceall = $("#PriceAll").val();
 
                 if (!imePrez || !offerDate) {
-                     
-                    alert("Molimo vas popunite sva polja.");
-                    return false; // Prevent form submission
-                }
-
-                var resForm = $("#reservationCreateForm");
-                var formData = resForm.serialize();
-                $.ajax({
-                    type: 'POST',
-                    url: '/Reservations/CreateReservation',
-                    data: formData,
-                    success: function (response) {
-                        debugger;
-                        if (response.success) {
-                            reservationID_Global = response.reservationID;
-                            newToolReservationModal(action, response.reservationID);
-                            // show gumb za ponovno spremanje ponude ako stigneš
+                    alert("Molimo vas popunite sva polja.");                   
+                    return false;
+                } else {
+                    var resForm = $("#reservationCreateForm");
+                    var formData = resForm.serialize();
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Reservations/CreateReservation',
+                        data: formData,
+                        success: function (response) {
+                            debugger;
+                            if (response.success) {
+                                reservationID_Global = response.reservationID;
+                                table.ajax.reload();
+                                newToolReservationModal(response.reservationID);
+                            } else {
+                                alert("Error 2.");
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert("Error 3.");
                         }
-                    },
-                    error: function (xhr, status, error) {
-                    }
-                });
+                    });
+                }                
             } else {
-                newToolReservationModal(action, reservationID_Global);
+                //else just raise modal for adding tools
+                debugger;
+                newToolReservationModal(reservationID_Global);
             }
-            return false; // Prevent default form submission
+            return false;
         }
 
-        var newToolReservationModal = function (action, reservationID) {
+        var newToolReservationModal = function (reservationID) {
+            debugger;
+            //get html for modal view content
+            var action = "@Url.Action("InjectToolReservationView", "Reservations")";
             $.ajax({
                 type: 'GET',
                 url: action,
                 data: { reservationID: reservationID },
                 success: function (response) {
-                        _renderFormCreateToolReservation(response);
+                    debugger;
+                    //inject to modal
+                    _renderFormCreateToolReservation(response);
+
                 },
                 error: function (xhr, status, error) {
-
+                    debugger;
+                    alert("Error 4.");
                 }
             });
             return false;
         }
 
         var _renderFormCreateToolReservation = function (response) {
-            debugger;
             _htmlContainerToolReservation.html(response);
             $('#toolReservationCreateForm').on('submit', function (e) {
                 e.preventDefault();
             });
 
-            //ajax call to fill select
+            //obsolete
             @*$.ajax({
                 type: 'GET',
                 url: '@Url.Action("GetToolTypes", "Reservations")',
@@ -229,6 +241,8 @@
                 }
             });*@
 
+            $('#Price').prop('disabled', true);
+
             // select2 call wiht infinite scrolling - lazy loading
             try {
                 $('#toolTypesSelect').select2({
@@ -243,23 +257,72 @@
                                 search: params.term,
                                 page: params.page || 1
                             }
-
                             return query;
                         }
                     }
                 }).on('select2:select', function (e) {
-                    debugger;
+                    // get selected tool and extract price
+                    // not the best code but in a hurry:-)
                     var price = e.params.data.text;
                     price = price.substring(price.indexOf('€') + 1)
-                    price_Global = price;
-                    $('#Price').val(parseInt(price))
+                    price_Global = parseFloat(price);
+                    tryCalculatePrice();  
+                    $('#Price').val(parseFloat(priceDateAdjusted))
+                });
+
+                $('#DateFrom').datetimepicker({
+                    format: 'd/m/Y H:i:s',
+                    onClose: function (dateText, inst) {
+                        tryCalculatePrice();
+                        $('#Price').val(parseFloat(priceDateAdjusted))
+                    }
+                });
+                $('#DateTo').datetimepicker({
+                    format: 'd/m/Y H:i:s',
+                    onClose: function (dateText, inst) {
+                        tryCalculatePrice();
+                        $('#Price').val(parseFloat(priceDateAdjusted))
+                    }
                 });
             } catch (e) {
-
+                alert("Error 5.");
             }
             return false;
         }
 
+
+        function tryCalculatePrice() {
+            debugger;
+            var dateFrom = $('#DateFrom').val();
+            var dateTo = $('#DateTo').val();
+
+            
+            if (dateFrom && dateTo) {
+                var startDateParts = dateFrom.split(/[\/ :]/);
+                var endDateParts = dateTo.split(/[\/ :]/);
+
+                var startDate = new Date(startDateParts[2], startDateParts[1] - 1, startDateParts[0], startDateParts[3], startDateParts[4], startDateParts[5]);
+                var endDate = new Date(endDateParts[2], endDateParts[1] - 1, endDateParts[0], endDateParts[3], endDateParts[4], endDateParts[5]);
+                
+                var timeDifferenceMs = endDate.getTime() - startDate.getTime();
+
+                var timeDifferenceDays = timeDifferenceMs / (1000 * 3600 * 24);
+
+                var discountRate = 0;
+                if (timeDifferenceDays >= 7) {
+                    discountRate = 0.1; 
+                } else if (timeDifferenceDays >= 3) {
+                    discountRate = 0.05; 
+                }
+
+                var pricePerDay = price_Global;
+
+                priceDateAdjusted = (1 - discountRate) * timeDifferenceDays * pricePerDay;
+                 
+            }
+        }
+
+        //obsolete when having select2
         //function populateToolTypesSelect(toolTypes) {
 
         //    var selectElement = $('#toolTypeSelect');
@@ -274,95 +337,98 @@
         //}
 
         var createToolReservation = function () {
+            debugger;
 
             action = "@Url.Action( "CreateToolReservation", "Reservations")";
 
-            var dateFrom = $("#dateFrom").val();
-            var dateTo = $("#dateTo").val();
+            var dateFrom = $("#DateFrom").val();
+            var dateTo = $("#DateTo").val();
             var price = $("#Price").val();
             var toolID = $('#toolTypesSelect').val();
 
             if (!dateFrom || !dateTo || !price || !toolID) {
-                // If any field is empty, show an alert or error message
                 alert("Molimo vas popunite sva polja.");
-                return false; // Prevent form submission
-            }
-
-            $("#ToolID").val(toolID);
-            var resForm = $("#toolReservationCreateForm");
-            var formData = resForm.serialize();
-            $.ajax({
-                type: 'POST',
-                url: action,
-                data: formData,
-                success: function (response) {
-                    if (response.success) {
-                        _ToolReservationModal.modal('hide');
-                        _ReservationModal.modal('show');
-                        fillReservation(response.reservationID);
-                    } else {
-
+                return false;
+            } else {
+                $("#ToolID").val(toolID);
+                debugger;
+                var resForm = $("#toolReservationCreateForm");
+                var formData = resForm.serialize();
+                formData += '&Price=' + priceDateAdjusted.toFixed(0);
+                $.ajax({
+                    type: 'POST',
+                    url: action,
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            _ToolReservationModal.modal('hide');
+                            _ReservationModal.modal('show');
+                            fillReservation(response.reservationID);
+                        } else {
+                            alert("Error 6.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error 7.");
                     }
-                },
-                error: function (xhr, status, error) {
-
-                }
-            });
-            return false;
+                });
+                return false;
+            }
+            
         }
 
         var editReservation = function (reservationID) {
-            debugger;
             action = "@Url.Action( "InjectReservationView", "Reservations")";
             $.ajax({
                 url: action
             }).done(function (response) {
-                    debugger;
                     _htmlContainerReservation.html(response);
                     $('#reservationCreateForm').on('submit', function (e) {
                         e.preventDefault();
                     });
+                    debugger;
+                    $('#OfferDate').datetimepicker({
+                        format: 'd/m/Y H:i:s',
+                        onClose: function (dateText, inst) {
+                            debugger;
+                             
+                        }
+                    });
                     fillReservation(reservationID);
                     reservationID_Global = reservationID;
                 }).fail(function (xhr) {
-                    if (xhr.responseText && JSON.parse(xhr.responseText).Message) {
-
-                    }
+                    alert("Error 8.");
                 });
             return false;
         }
 
         var fillReservation = function (reservationID) {
-            var resForm = $("#reservationCreateForm");
-            //ponovo dohvati ponudu - rezervaciju 
+            //ponovo dohvati ponudu - rezervaciju
             $.ajax({
                 url: '/Reservations/GetReservationByID',
                 data: { reservationID: reservationID },
                 success: function (response) {
-                    debugger;
-                   
-                        $('#reservationCreateForm').off('submit');
-                        $('#reservationCreateForm').on('submit', function (e) {
-                            e.preventDefault();
-                        });
-                        fillReservationFormData(response, reservationID);
-                    
+                    $('#reservationCreateForm').off('submit');
+                    $('#reservationCreateForm').on('submit', function (e) {
+                        e.preventDefault();
+                    });
+                    fillReservationFormData(response, reservationID);
                 },
                 error: function (xhr, status, error) {
-
+                    alert("Error 9.");
                 }
             });
-            //fillReservationFormData("", reservationID);
             return false;
         }
 
         var fillReservationFormData = function (response, reservationID) {
-            debugger;
-            //fill ime i prezime i datum i cijenu             
+            //fill ime i prezime i datum i cijenu
             $("#ImePrez").val(response.ImePrez);
-            $("#OfferDate").val(response.OfferDateStr);
-            // datatable za rezervirane alate
-            debugger;
+            $("#OfferDate").val(response.OfferDate);
+            $("#Note").val(response.Note);
+            $("#PriceAll").val(response.PriceAll);
+
+            //Reinitialize Datatable
             if ($.fn.DataTable.isDataTable('#toolReservationsForReservation')) {
                 $('#toolReservationsForReservation').DataTable().destroy();
             }
@@ -379,7 +445,6 @@
                     }
                 },
                 "drawCallback": function (settings) {
-                    //$.hideLoading();
                 },
                 responsive: true,
                 paging: true,
@@ -397,21 +462,17 @@
                             return htmlChunk;
                     }
                 }]
-            }); 
+            });
         }
 
 
         function deleteTools(toolReservationID, reservationID) {
-            //deleteToolReservation
-            debugger;
-
             deleteToolReservation(toolReservationID, reservationID);
             _ReservationModal.modal('show');
             editReservation(reservationID);
         }
 
         var deleteToolReservation = function (toolReservationID, reservationID) {
-
             $.ajax({
                 type: 'GET',
                 url: '/Reservations/DeleteToolReservationFromReservation',
@@ -420,19 +481,18 @@
                     $('#reservationCreateForm').on('submit', function (e) {
                         e.preventDefault();
                     });
-
                     _ReservationModal.modal('show');
                     editReservation(reservationID);
                 },
                 error: function (xhr, status, error) {
-
+                    alert("Error 10");
                 }
             });
             return false;
         }
 
         //var handleDateChange = function () {
-             
+
         //}
 
     </script>

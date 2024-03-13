@@ -10,13 +10,11 @@ namespace ToolsRent.Web.ViewModels
 
         public string ImePrez { get; set; }
         public int ReservationID { get; set; }
-        public DateTime OfferDate { get; set; }
-
-        public string OfferDateStr { get; set; }
+        public string OfferDate { get; set; }
 
         public string Note { get; set; }
 
-        public int PriceAll { get; set; }
+        public decimal PriceAll { get; set; }
 
         public List<ToolReservationViewModel> ToolReservations { get; set; }
     }

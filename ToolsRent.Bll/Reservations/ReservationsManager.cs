@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using ToolsRent.Dal.Models;
 using ToolsRent.Dal.Reservations;
@@ -7,8 +8,6 @@ namespace ToolsRent.Bll.Reservations
 {
     public class ReservationsManager
     {
-    
-
         public static int CreateReservation(ReservationModel res)
         {
             int resID = 0;
@@ -18,7 +17,7 @@ namespace ToolsRent.Bll.Reservations
             }
             catch (Exception ex)
             {
-                //error handler
+                Log.Error(ex, "Error occured");
             }
             return resID;
         }
@@ -29,10 +28,11 @@ namespace ToolsRent.Bll.Reservations
             try
             {
                 resID = ReservationsDao.CreateToolReservation(tool);
+                ReservationsDao.RefreshPriceAllsFporReservationID(tool.ReservationID);
             }
             catch (Exception ex)
             {
-                //error handler
+                Log.Error(ex, "Error occured");
             }
             return resID;
         }
@@ -45,7 +45,7 @@ namespace ToolsRent.Bll.Reservations
             }
             catch (Exception ex)
             {
-                //error handler
+                Log.Error(ex, "Error occured");
             }
         }
 
@@ -54,10 +54,11 @@ namespace ToolsRent.Bll.Reservations
             try
             {
                 ReservationsDao.DeleteToolReservation(toolReservationID, reservationID);
+                ReservationsDao.RefreshPriceAllsFporReservationID(reservationID);
             }
             catch (Exception ex)
             {
-                //error handler
+                Log.Error(ex, "Error occured");
             }
         }
 
@@ -70,7 +71,7 @@ namespace ToolsRent.Bll.Reservations
             }
             catch (Exception ex)
             {
-                //error handler
+                Log.Error(ex, "Error occured");
             }
             return reservations;
         }
@@ -84,7 +85,7 @@ namespace ToolsRent.Bll.Reservations
             }
             catch (Exception ex)
             {
-                //error handler
+                Log.Error(ex, "Error occured");
             }
             return reservations;
         }
@@ -94,11 +95,11 @@ namespace ToolsRent.Bll.Reservations
             List<ToolReservationModel> reservations = new List<ToolReservationModel>();
             try
             {
-                reservations = ReservationsDao.GetReseGetToolReservationsByReservationIDrvations(reservationID);
+                reservations = ReservationsDao.GetToolReservationsByReservationID(reservationID);
             }
             catch (Exception ex)
             {
-                //error handler
+                Log.Error(ex, "Error occured");
             }
             return reservations;
         }

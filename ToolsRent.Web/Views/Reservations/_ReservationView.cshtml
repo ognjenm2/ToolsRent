@@ -15,13 +15,20 @@
             <div class="form-group">
                 <label>Datum rezervacije:</label>
                 <div class="col-12">
-                    @Html.TextBoxFor(model => model.OfferDate, new { @class = "datepicker" })
+                    @Html.TextBoxFor(model => model.OfferDate, new { @class = "date form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Bilješka:</label>
+                <div class="col-12">
+                    @Html.TextBoxFor(model => model.Note, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group ">
                 <label>Cijena:</label>
                 <div class="col-12">
-                    @Html.DisplayFor(m => m.PriceAll)
+                    @Html.TextBoxFor(model => model.PriceAll, new { @class = "form-control" })
+                    @*@Html.DisplayFor(m => m.PriceAll)*@
                 </div>
             </div>
             <br />
