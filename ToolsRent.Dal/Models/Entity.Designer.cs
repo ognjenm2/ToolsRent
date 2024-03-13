@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\__Projects\InRebus\ToolsRent\ToolsRent.Dal\Models\ToolsRentDB.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\_Projekti_backup\ToolsRent2\ToolsRent.Dal\Models\Entity.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

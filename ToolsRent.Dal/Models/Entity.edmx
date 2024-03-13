@@ -34,7 +34,7 @@
           <Property Name="DateTo" Type="datetime" />
           <Property Name="Price" Type="decimal" Precision="10" Scale="2" />
         </EntityType>
-        <Association Name="FK__ToolsRese__Reser__656C112C">
+        <Association Name="FK__ToolsRese__Reser__286302EC">
           <End Role="Reservations" Type="Self.Reservations" Multiplicity="0..1" />
           <End Role="ToolsReservations" Type="Self.ToolsReservations" Multiplicity="*" />
           <ReferentialConstraint>
@@ -46,7 +46,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ToolsRese__ToolI__66603565">
+        <Association Name="FK__ToolsRese__ToolI__29572725">
           <End Role="Tools" Type="Self.Tools" Multiplicity="0..1" />
           <End Role="ToolsReservations" Type="Self.ToolsReservations" Multiplicity="*" />
           <ReferentialConstraint>
@@ -62,11 +62,11 @@
           <EntitySet Name="Reservations" EntityType="Self.Reservations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tools" EntityType="Self.Tools" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ToolsReservations" EntityType="Self.ToolsReservations" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__ToolsRese__Reser__656C112C" Association="Self.FK__ToolsRese__Reser__656C112C">
+          <AssociationSet Name="FK__ToolsRese__Reser__286302EC" Association="Self.FK__ToolsRese__Reser__286302EC">
             <End Role="Reservations" EntitySet="Reservations" />
             <End Role="ToolsReservations" EntitySet="ToolsReservations" />
           </AssociationSet>
-          <AssociationSet Name="FK__ToolsRese__ToolI__66603565" Association="Self.FK__ToolsRese__ToolI__66603565">
+          <AssociationSet Name="FK__ToolsRese__ToolI__29572725" Association="Self.FK__ToolsRese__ToolI__29572725">
             <End Role="Tools" EntitySet="Tools" />
             <End Role="ToolsReservations" EntitySet="ToolsReservations" />
           </AssociationSet>
@@ -85,7 +85,7 @@
           <Property Name="OfferDateTime" Type="DateTime" Precision="3" />
           <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="PriceAll" Type="Decimal" Precision="10" Scale="2" />
-          <NavigationProperty Name="ToolsReservations" Relationship="Self.FK__ToolsRese__Reser__656C112C" FromRole="Reservations" ToRole="ToolsReservations" />
+          <NavigationProperty Name="ToolsReservations" Relationship="Self.FK__ToolsRese__Reser__286302EC" FromRole="Reservations" ToRole="ToolsReservations" />
         </EntityType>
         <EntityType Name="Tools">
           <Key>
@@ -94,7 +94,7 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ToolKind" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Price" Type="Decimal" Precision="10" Scale="2" />
-          <NavigationProperty Name="ToolsReservations" Relationship="Self.FK__ToolsRese__ToolI__66603565" FromRole="Tools" ToRole="ToolsReservations" />
+          <NavigationProperty Name="ToolsReservations" Relationship="Self.FK__ToolsRese__ToolI__29572725" FromRole="Tools" ToRole="ToolsReservations" />
         </EntityType>
         <EntityType Name="ToolsReservations">
           <Key>
@@ -106,10 +106,10 @@
           <Property Name="DateFrom" Type="DateTime" Precision="3" />
           <Property Name="DateTo" Type="DateTime" Precision="3" />
           <Property Name="Price" Type="Decimal" Precision="10" Scale="2" />
-          <NavigationProperty Name="Reservations" Relationship="Self.FK__ToolsRese__Reser__656C112C" FromRole="ToolsReservations" ToRole="Reservations" />
-          <NavigationProperty Name="Tools" Relationship="Self.FK__ToolsRese__ToolI__66603565" FromRole="ToolsReservations" ToRole="Tools" />
+          <NavigationProperty Name="Reservations" Relationship="Self.FK__ToolsRese__Reser__286302EC" FromRole="ToolsReservations" ToRole="Reservations" />
+          <NavigationProperty Name="Tools" Relationship="Self.FK__ToolsRese__ToolI__29572725" FromRole="ToolsReservations" ToRole="Tools" />
         </EntityType>
-        <Association Name="FK__ToolsRese__Reser__656C112C">
+        <Association Name="FK__ToolsRese__Reser__286302EC">
           <End Role="Reservations" Type="Self.Reservations" Multiplicity="0..1" />
           <End Role="ToolsReservations" Type="Self.ToolsReservations" Multiplicity="*" />
           <ReferentialConstraint>
@@ -121,7 +121,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__ToolsRese__ToolI__66603565">
+        <Association Name="FK__ToolsRese__ToolI__29572725">
           <End Role="Tools" Type="Self.Tools" Multiplicity="0..1" />
           <End Role="ToolsReservations" Type="Self.ToolsReservations" Multiplicity="*" />
           <ReferentialConstraint>
@@ -137,11 +137,11 @@
           <EntitySet Name="Reservations" EntityType="Self.Reservations" />
           <EntitySet Name="Tools" EntityType="Self.Tools" />
           <EntitySet Name="ToolsReservations" EntityType="Self.ToolsReservations" />
-          <AssociationSet Name="FK__ToolsRese__Reser__656C112C" Association="Self.FK__ToolsRese__Reser__656C112C">
+          <AssociationSet Name="FK__ToolsRese__Reser__286302EC" Association="Self.FK__ToolsRese__Reser__286302EC">
             <End Role="Reservations" EntitySet="Reservations" />
             <End Role="ToolsReservations" EntitySet="ToolsReservations" />
           </AssociationSet>
-          <AssociationSet Name="FK__ToolsRese__ToolI__66603565" Association="Self.FK__ToolsRese__ToolI__66603565">
+          <AssociationSet Name="FK__ToolsRese__ToolI__29572725" Association="Self.FK__ToolsRese__ToolI__29572725">
             <End Role="Tools" EntitySet="Tools" />
             <End Role="ToolsReservations" EntitySet="ToolsReservations" />
           </AssociationSet>
